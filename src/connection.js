@@ -14,15 +14,17 @@ SELECT ?value WHERE {
     ps:P2048 ?value .
 }`
 
-const client = new SparqlClient({ endpointUrl })
-const stream = await client.query.select(query)
-
-stream.on('data', row => {
+export const doit = async() => {
+    const client = new SparqlClient({ endpointUrl })
+    const stream = await client.query.select(query)
+    stream.on('data', row => {
     Object.entries(row).forEach(([key, value]) => {
         console.log(`${key}: ${value.value} (${value.termType})`)
     })
-})
+    })
 
-stream.on('error', err => {
+    stream.on('error', err => {
     console.error(err)
-})
+    })
+}
+
