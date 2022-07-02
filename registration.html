@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> -->
+    <script type="text/javascript" src="sparql.js"></script>
+    <script type="text/javascript">
+
+   var bioportal = new SPARQL({ 
+           apikey: "YOUR-API-KEY-HERE", 
+           endpoint: "http://development:8310/pfarrerbuch/update"
+         });
+
+    function onFailure(xhr, status) {
+        document.getElementById("result").innerHTML = status + " (See console.)";
+        console.log("error");
+        console.log(xhr);
+    }
+
+    function onSuccess(json) {
+      // console.log(json)
+      //   var html = "<table border='1'>";
+      //   for (var b in json.results.bindings) {
+      //       html += "<tr>";
+      //       for (var x in json.head.vars) { 
+      //           var value = json.results.bindings[b][json.head.vars[x]];
+      //           if (value.type == "uri")
+      //               html += "<td><a href='"+value.value+"'>" + value.value + "</a></td>";
+      //           else
+      //               html += "<td>" + value.value + "</td>";
+      //       }
+      //       html += "</tr>";
+      //   }
+      //   html += "</table>";
+      //   document.getElementById("result").innerHTML = html;
+    }
+
+    function register() {
+      const firstname = document.getElementById('firstname').value;
+      const lastname = document.getElementById('lastname').value;
+      // const birthdate = document.getElementById('birthdate').value;
+      const comment = document.getElementById('comment').value;
+      const gender = document.getElementById('gender').value;
+      // alert(firstname+" "+lastname+" "+comment+" "+gender)
+      var query_string = `
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        PREFIX hp: <http://purl.org/voc/hp/>
+        INSERT DATA{
+          foaf:Person foaf:firstName ${firstname}.
+          foaf:Person foaf:lastName ${lastname}.
+          foaf:Person foaf:gender ${gender}.
+          foaf:Person rdfs:comment ${comment}.
+        }`;
+
+      console.log(query_string)
+      bioportal.query(query_string).done(onSuccess).error(onFailure);
+      return false;
+    }
+
+
+    </script>
+  </head>
+   <body>
+    <br>
+    <div class="container">
+      <form>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">First Name</label>
+            <input type="text" class="form-control" id="firstname" placeholder="First Name">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputPassword4">Last Name</label>
+            <input type="text" class="form-control" id="lastname" placeholder="Last Name">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputAddress">Comment</label>
+          <input type="text" class="form-control" id="comment" placeholder="This is a good priest">
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="inputState">Gender</label>
+            <select id="gender" class="form-control">
+              <option selected>Choose...</option>
+              <option>Male</option>
+              <option>Female</option>
+            </select>
+          </div>
+        </div>
+        <label for="date">Date</label>
+        <div class="col-sm-4">
+            <div class="input-group date" id="datepicker">
+                <input type="text" class="form-control" id="date">
+                <span class="input-group-append">
+                    <span class="input-group-text bg-white">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                </span>
+            </div>
+        </div>
+  
+      <script type="text/javascript">
+          $(function() {
+              $('#datepicker').datepicker();
+          });
+      </script>
+
+        <button type="submit" class="btn btn-primary" onclick="return register()">Register</button>
+      </form>
+    </div>
+    
+    <div id="result">Saving ontology data...</div> -->
+  </div>
+  </body>
+</html>
